@@ -1,9 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import logo from '../logo.svg';
+import { injectGlobal } from 'styled-components';
 import { getCategories } from '../redux/modules/categories';
 import { getPosts } from '../redux/modules/posts';
-import './App.css';
+import Sidebar from './Sidebar';
+
+injectGlobal`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html {
+    font-size: 100%;
+  }
+  body {
+    background: #212121;
+    color: #fff;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  button:focus,
+  button:active {
+    outline: none;
+  }
+`;
 
 class App extends Component {
   componentDidMount() {
@@ -12,15 +35,11 @@ class App extends Component {
   }
 
   render() {
+    const { categories } = this.props;
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Sidebar categories={categories} />
       </div>
     );
   }
