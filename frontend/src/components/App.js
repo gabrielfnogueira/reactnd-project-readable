@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { injectGlobal } from 'styled-components';
-import { getCategories } from '../redux/modules/categories';
-import { getPosts } from '../redux/modules/posts';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import styled, { injectGlobal } from 'styled-components';
+import PostList from './PostList';
 import Sidebar from './Sidebar';
 
 injectGlobal`
@@ -13,9 +12,10 @@ injectGlobal`
   }
   html {
     font-size: 100%;
+    font-family: sans-serif;
   }
   body {
-    background: #212121;
+    background: #1a1a1a;
     color: #fff;
   }
   a {
@@ -28,32 +28,36 @@ injectGlobal`
   }
 `;
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 25rem 1fr;
+  height: 100vh;
+`;
+
+export const Content = styled.div`
+  padding: 2rem;
+`;
+
 class App extends Component {
-  componentDidMount() {
-    this.props.getCategories();
-    this.props.getPosts();
-  }
-
   render() {
-    const { categories } = this.props;
-
     return (
-      <div className="App">
-        <Sidebar categories={categories} />
-      </div>
+      <BrowserRouter>
+        <GridContainer>
+          <Sidebar />
+          <Content>
+            <Switch>
+              <Route
+                path="/:category?"
+                render={props => {
+                  return <PostList selectedCategory={props.match.params.category} />;
+                }}
+              />
+            </Switch>
+          </Content>
+        </GridContainer>
+      </BrowserRouter>
     );
   }
 }
-
-App = connect(
-  state => ({
-    categories: state.categories,
-    posts: state.posts
-  }),
-  {
-    getCategories,
-    getPosts
-  }
-)(App);
 
 export default App;

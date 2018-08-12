@@ -40,7 +40,7 @@ export function fetchPosts(callbacks) {
 }
 
 export function fetchPostsByCategory(category, callbacks) {
-  get(`${category}/posts`, { headers })
+  get(`${API_URL}/${category}/posts`, { headers })
     .then(response => {
       if (callbacks && callbacks.success) {
         callbacks.success(response.data);

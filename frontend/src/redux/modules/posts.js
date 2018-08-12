@@ -1,5 +1,6 @@
 import { omit } from 'lodash';
-import { fetchPosts } from '../../utils/api';
+import { createSelector } from 'reselect';
+import { fetchPosts, fetchPostsByCategory } from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -44,3 +45,28 @@ export function getPosts() {
     });
   };
 }
+
+export function getPostsByCategory(category) {
+  return dispatch => {
+    fetchPostsByCategory(category, {
+      success: posts => {
+        posts.forEach(post => dispatch({ type: ADD_POST, payload: post }));
+      }
+    });
+  };
+}
+
+/**
+ * SELECTORS
+ */
+export const postsSelector = createSelector(
+  state => state.posts,
+  (state, props) => props.selectedCategory,
+  (posts, selectedCategory) => {
+    return selectedCategory
+      ? Object.keys(posts)
+          .filter(postId => posts[postId].category === selectedCategory)
+          .map(postId => posts[postId])
+      : Object.keys(posts).map(postId => posts[postId]);
+  }
+);
