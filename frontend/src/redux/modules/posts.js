@@ -61,12 +61,14 @@ export function getPostsByCategory(category) {
  */
 export const postsSelector = createSelector(
   state => state.posts,
+  state => state.orderBy,
   (state, props) => props.selectedCategory,
-  (posts, selectedCategory) => {
+  (posts, orderBy, selectedCategory) => {
     return selectedCategory
       ? Object.keys(posts)
           .filter(postId => posts[postId].category === selectedCategory)
           .map(postId => posts[postId])
+          .sort((a, b) => b[orderBy] - a[orderBy])
       : Object.keys(posts).map(postId => posts[postId]);
   }
 );

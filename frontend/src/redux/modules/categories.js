@@ -9,7 +9,8 @@ const INITIAL_STATE = [];
 
 /**
  * REDUCER
- */ export default function reducer(state = INITIAL_STATE, action) {
+ */
+export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_CATEGORIES:
       return action.payload;

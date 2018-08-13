@@ -1,11 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { setOrderBy } from '../redux/modules/orderBy';
 import { getPosts, getPostsByCategory, postsSelector } from '../redux/modules/posts';
+import OrderBy from './OrderBy';
 import Post from './Post';
 
 const Title = styled.h1`
   margin-bottom: 2rem;
+  display: inline-block;
 `;
 
 const List = styled.ul`
@@ -40,12 +43,13 @@ class PostList extends PureComponent {
   }
 
   render() {
-    const { selectedCategory, posts } = this.props;
+    const { selectedCategory, posts, orderBy, setOrderBy } = this.props;
     const title = `All the posts ${selectedCategory ? `in the '${selectedCategory}' category` : ''}`;
 
     return (
       <section>
         <Title>{title}</Title>
+        <OrderBy orderBy={orderBy} setOrderBy={setOrderBy} />
         <List>
           {posts.length > 0 ? (
             posts.map(post => (
@@ -64,11 +68,13 @@ class PostList extends PureComponent {
 
 PostList = connect(
   (state, props) => ({
-    posts: postsSelector(state, props)
+    posts: postsSelector(state, props),
+    orderBy: state.orderBy
   }),
   {
     getPosts,
-    getPostsByCategory
+    getPostsByCategory,
+    setOrderBy
   }
 )(PostList);
 
