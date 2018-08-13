@@ -2,7 +2,9 @@ import { faComments, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { saveVote } from '../redux/modules/posts';
 import Voter from './Voter';
 
 const Wrapper = styled.div`
@@ -64,7 +66,7 @@ const Comments = ({ commentCount }) => {
   );
 };
 
-const Post = ({ post }) => {
+let Post = ({ post, saveVote }) => {
   const postedBy = `posted by ${post.author}`;
   const dateTime = `at ${new Date(post.timestamp).toLocaleDateString()} ${new Date(
     post.timestamp
@@ -72,7 +74,7 @@ const Post = ({ post }) => {
 
   return (
     <Wrapper>
-      <Voter value={post.voteScore} />
+      <Voter value={post.voteScore} onVote={option => saveVote(post.id, option)} />
       <PostInfo>
         <Author>{postedBy}</Author> <At>{dateTime}</At>
         <Title>{post.title}</Title>
@@ -93,5 +95,12 @@ const Post = ({ post }) => {
 Post.propTypes = {
   post: PropTypes.object.isRequired
 };
+
+Post = connect(
+  null,
+  {
+    saveVote
+  }
+)(Post);
 
 export default Post;

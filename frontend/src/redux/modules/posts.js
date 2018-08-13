@@ -1,6 +1,6 @@
 import { omit } from 'lodash';
 import { createSelector } from 'reselect';
-import { fetchPosts, fetchPostsByCategory } from '../../utils/api';
+import { fetchPosts, fetchPostsByCategory, postVote } from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -56,6 +56,16 @@ export function getPostsByCategory(category) {
   };
 }
 
+export function saveVote(postId, voteOption) {
+  return dispatch => {
+    postVote(postId, voteOption, {
+      success: post => {
+        dispatch({ type: ADD_POST, payload: post });
+      }
+    });
+  };
+}
+
 /**
  * SELECTORS
  */
@@ -69,6 +79,8 @@ export const postsSelector = createSelector(
           .filter(postId => posts[postId].category === selectedCategory)
           .map(postId => posts[postId])
           .sort((a, b) => b[orderBy] - a[orderBy])
-      : Object.keys(posts).map(postId => posts[postId]);
+      : Object.keys(posts)
+          .map(postId => posts[postId])
+          .sort((a, b) => b[orderBy] - a[orderBy]);
   }
 );

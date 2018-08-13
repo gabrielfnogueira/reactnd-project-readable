@@ -35,7 +35,7 @@ const Voter = ({ value, onVote }) => {
         onClick={e => {
           e.preventDefault();
           e.stopPropagation();
-          onVote('upvote');
+          onVote('upVote');
         }}
       >
         <FontAwesomeIcon icon={faAngleUp} />
@@ -45,7 +45,7 @@ const Voter = ({ value, onVote }) => {
         onClick={e => {
           e.preventDefault();
           e.stopPropagation();
-          onVote('downvote');
+          onVote('downVote');
         }}
       >
         <FontAwesomeIcon icon={faAngleDown} />

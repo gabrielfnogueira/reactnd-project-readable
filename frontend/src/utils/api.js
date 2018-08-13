@@ -1,4 +1,4 @@
-import { get } from 'axios';
+import { get, post } from 'axios';
 
 const API_URL = 'http://localhost:3001';
 
@@ -48,6 +48,22 @@ export function fetchPostsByCategory(category, callbacks) {
     })
     .catch(err => {
       console.log(`There was an error fetching /${category}/posts`, err);
+
+      if (callbacks && callbacks.error) {
+        callbacks.error(err);
+      }
+    });
+}
+
+export function postVote(postId, option, callbacks) {
+  post(`${API_URL}/posts/${postId}`, { option }, { headers })
+    .then(response => {
+      if (callbacks && callbacks.success) {
+        callbacks.success(response.data);
+      }
+    })
+    .catch(err => {
+      console.log(`There was an error posting your vote to /posts/${postId}`, err);
 
       if (callbacks && callbacks.error) {
         callbacks.error(err);
