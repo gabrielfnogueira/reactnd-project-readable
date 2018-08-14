@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled, { injectGlobal } from 'styled-components';
+import PostDetails from './PostDetails';
 import PostList from './PostList';
 import Sidebar from './Sidebar';
 
@@ -47,11 +48,13 @@ class App extends Component {
           <Content>
             <Switch>
               <Route
+                exact
                 path="/:category?"
                 render={props => {
                   return <PostList selectedCategory={props.match.params.category} />;
                 }}
               />
+              <Route exact path="/:category/:postId" component={PostDetails} />
             </Switch>
           </Content>
         </GridContainer>

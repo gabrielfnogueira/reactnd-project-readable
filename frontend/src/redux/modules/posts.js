@@ -1,6 +1,6 @@
 import { omit } from 'lodash';
 import { createSelector } from 'reselect';
-import { fetchPosts, fetchPostsByCategory, postVote } from '../../utils/api';
+import { fetchPostById, fetchPosts, fetchPostsByCategory, postVote } from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -51,6 +51,16 @@ export function getPostsByCategory(category) {
     fetchPostsByCategory(category, {
       success: posts => {
         posts.forEach(post => dispatch({ type: ADD_POST, payload: post }));
+      }
+    });
+  };
+}
+
+export function getPostById(postId) {
+  return dispatch => {
+    fetchPostById(postId, {
+      success: post => {
+        dispatch({ type: ADD_POST, payload: post });
       }
     });
   };

@@ -17,10 +17,6 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 3rem 1fr;
   cursor: pointer;
-
-  &:hover {
-    border-color: #444;
-  }
 `;
 
 const PostInfo = styled.div``;
@@ -38,6 +34,11 @@ const Title = styled.h1`
   margin-top: 0.5rem;
 `;
 
+const Body = styled.div`
+  margin: 2rem 0;
+  color: #fff;
+`;
+
 const Button = styled.button`
   font-size: 0.85rem;
   background: transparent;
@@ -51,6 +52,23 @@ const Button = styled.button`
     color: #fff;
   }
 `;
+
+const ActionButton = ({ action, children }) => {
+  return (
+    <Button
+      onClick={e => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (action) {
+          action();
+        }
+      }}
+    >
+      {children}
+    </Button>
+  );
+};
 
 const Comments = ({ commentCount }) => {
   let label = 'no comments yet';
@@ -66,7 +84,11 @@ const Comments = ({ commentCount }) => {
   );
 };
 
-let Post = ({ post, saveVote }) => {
+let Post = ({ post, saveVote, showBody }) => {
+  if (!post) {
+    return null;
+  }
+
   const postedBy = `posted by ${post.author}`;
   const dateTime = `at ${new Date(post.timestamp).toLocaleDateString()} ${new Date(
     post.timestamp
@@ -78,26 +100,31 @@ let Post = ({ post, saveVote }) => {
       <PostInfo>
         <Author>{postedBy}</Author> <At>{dateTime}</At>
         <Title>{post.title}</Title>
+        {showBody && <Body>{post.body}</Body>}
         <Button>
           <Comments commentCount={post.commentCount} />
         </Button>
-        <Button>
+        <ActionButton>
           <FontAwesomeIcon icon={faPencilAlt} /> edit
-        </Button>
-        <Button>
+        </ActionButton>
+        <ActionButton>
           <FontAwesomeIcon icon={faTrashAlt} /> delete
-        </Button>
+        </ActionButton>
       </PostInfo>
     </Wrapper>
   );
 };
 
 Post.propTypes = {
-  post: PropTypes.object.isRequired
+  postId: PropTypes.string,
+  saveVote: PropTypes.func.isRequired,
+  showBody: PropTypes.bool
 };
 
 Post = connect(
-  null,
+  (state, props) => ({
+    post: state.posts[props.postId]
+  }),
   {
     saveVote
   }

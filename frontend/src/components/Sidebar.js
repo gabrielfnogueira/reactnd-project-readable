@@ -47,7 +47,7 @@ class Sidebar extends Component {
     const selected = getCategoryFromURL();
     const categories = [
       { name: 'all', path: '/', active: selected === '/' },
-      ...this.props.categories.map(cat => ({ ...cat, active: cat.path === selected }))
+      ...this.props.categories.map(cat => ({ ...cat, path: `/${cat.path}`, active: cat.path === selected }))
     ];
 
     return (

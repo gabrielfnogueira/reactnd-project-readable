@@ -19,9 +19,9 @@ const OrderBy = ({ orderBy, setOrderBy }) => {
   return (
     <Wrapper>
       <Label>ordered by</Label>
-      <Select onChange={e => setOrderBy(e.target.value)}>
+      <Select onChange={e => setOrderBy(e.target.value)} value={orderBy}>
         {orderByOptions.map(option => (
-          <option key={option.value} value={option.value} selected={option.value === orderBy}>
+          <option key={option.value} value={option.value}>
             {option.text}
           </option>
         ))}

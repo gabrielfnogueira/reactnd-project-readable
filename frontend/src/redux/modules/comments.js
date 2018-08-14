@@ -1,12 +1,12 @@
 import { omit } from 'lodash';
-import { fetchComments } from '../../utils/api';
+import { fetchPostComments } from '../../utils/api';
 
 /**
  * ACTION TYPES
  */
-const ADD_COMMENT = 'posts/ADD_COMMENT';
-const UPDATE_COMMENT = 'posts/UPDATE_COMMENT';
-const DELETE_COMMENT = 'posts/DELETE_COMMENT';
+const ADD_COMMENT = 'comments/ADD_COMMENT';
+const UPDATE_COMMENT = 'comments/UPDATE_COMMENT';
+const DELETE_COMMENT = 'comments/DELETE_COMMENT';
 
 const INITIAL_STATE = {};
 
@@ -44,9 +44,9 @@ export default function reducer(state = INITIAL_STATE, action) {
 /**
  * ACTIONS
  */
-export function getCommentsByPost(postId) {
+export function getPostComments(postId) {
   return dispatch => {
-    fetchComments(postId, {
+    fetchPostComments(postId, {
       success: comments => {
         comments.forEach(comment => dispatch({ type: ADD_COMMENT, payload: comment }));
       }

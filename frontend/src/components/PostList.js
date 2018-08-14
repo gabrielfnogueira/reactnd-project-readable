@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { setOrderBy } from '../redux/modules/orderBy';
 import { getPosts, getPostsByCategory, postsSelector } from '../redux/modules/posts';
@@ -7,7 +8,7 @@ import OrderBy from './OrderBy';
 import Post from './Post';
 
 const Title = styled.h1`
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   display: inline-block;
 `;
 
@@ -18,6 +19,22 @@ const List = styled.ul`
 const ListItem = styled.li``;
 
 const EmptyItem = styled.li``;
+
+const PostLink = styled(Link)`
+  border: 1px solid #000;
+  display: block;
+  margin-bottom: 2rem;
+  border-radius: 0.2rem;
+
+  > div {
+    border: none;
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    border-color: #444;
+  }
+`;
 
 class PostList extends PureComponent {
   state = { posts: [] };
@@ -54,7 +71,9 @@ class PostList extends PureComponent {
           {posts.length > 0 ? (
             posts.map(post => (
               <ListItem key={post.id}>
-                <Post post={post} />
+                <PostLink to={`/${selectedCategory || post.category}/${post.id}`}>
+                  <Post postId={post.id} />
+                </PostLink>
               </ListItem>
             ))
           ) : (
