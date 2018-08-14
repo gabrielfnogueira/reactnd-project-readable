@@ -1,5 +1,12 @@
 import { omit } from 'lodash';
-import { fetchPostComments, postCommentVote } from '../../utils/api';
+import uuidv4 from 'uuid/v4';
+import {
+  createComment as postComment,
+  fetchPostComments,
+  postCommentVote,
+  updateComment as putComment,
+  deleteComment
+} from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -59,6 +66,45 @@ export function saveCommentVote(commentId, voteOption) {
     postCommentVote(commentId, voteOption, {
       success: comment => {
         dispatch({ type: ADD_COMMENT, payload: comment });
+      }
+    });
+  };
+}
+
+export function createComment(comment, postId, callback) {
+  return dispatch => {
+    const newComment = { ...comment, id: uuidv4(), timestamp: new Date().getTime(), parentId: postId };
+    postComment(newComment, {
+      success: comment => {
+        dispatch({ type: ADD_COMMENT, payload: { ...newComment, ...comment } });
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    });
+  };
+}
+
+export function updateComment(comment, callback) {
+  return dispatch => {
+    putComment(comment, {
+      success: comment => {
+        dispatch({ type: ADD_COMMENT, payload: comment });
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    });
+  };
+}
+
+export function removeComment(commentId) {
+  return dispatch => {
+    deleteComment(commentId, {
+      success: comment => {
+        dispatch({ type: DELETE_COMMENT, payload: comment });
       }
     });
   };

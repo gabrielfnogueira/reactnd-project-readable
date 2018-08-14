@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { saveCommentVote } from '../redux/modules/comments';
+import { createComment, removeComment, saveCommentVote, updateComment } from '../redux/modules/comments';
+import CommentForm from './CommentForm';
 import Info from './Info';
+import Modal from './Modal';
 
-const Wrapper = styled.div`
-  /* padding-left: 1rem; */
-`;
+const Wrapper = styled.div``;
+
+const AddComment = styled.button``;
 
 const List = styled.ul`
   list-style: none;
@@ -22,27 +24,76 @@ const ListItem = styled.li`
   padding: 1rem 0.5rem 0.5rem;
 `;
 
-let CommentList = ({ comments, saveCommentVote }) => {
-  return (
-    <Wrapper>
-      <List>
-        {comments &&
-          Object.keys(comments).map(commentId => (
-            <ListItem key={comments[commentId].id}>
-              <Info data={comments[commentId]} showBody onVote={option => saveCommentVote(commentId, option)} />
-            </ListItem>
-          ))}
-      </List>
-    </Wrapper>
-  );
-};
+class CommentList extends Component {
+  state = {
+    showModal: false,
+    selectedCommentId: null
+  };
+
+  emptyComment = {
+    author: '',
+    body: ''
+  };
+
+  handleModalOpen = commentId => {
+    this.setState({ showModal: true, selectedCommentId: commentId });
+  };
+
+  handleModalClose = () => {
+    this.setState({ showModal: false, selectedCommentId: null });
+  };
+
+  handleFormSubmit = comment => {
+    if (this.state.selectedCommentId) {
+      this.props.updateComment(comment, this.handleModalClose);
+    } else {
+      this.props.createComment(comment, this.props.postId, this.handleModalClose);
+    }
+  };
+
+  render() {
+    const { showModal, selectedCommentId } = this.state;
+    const { comments, saveCommentVote, removeComment } = this.props;
+
+    return (
+      <Wrapper>
+        <AddComment onClick={() => this.handleModalOpen()}>add comment</AddComment>
+        <List>
+          {comments &&
+            Object.keys(comments).map(commentId => (
+              <ListItem key={comments[commentId].id}>
+                <Info
+                  data={comments[commentId]}
+                  showBody
+                  onVote={option => saveCommentVote(commentId, option)}
+                  onEdit={() => this.handleModalOpen(commentId)}
+                  onRemove={() => removeComment(commentId)}
+                />
+              </ListItem>
+            ))}
+        </List>
+        <Modal isOpen={showModal} onRequestClose={this.handleModalClose} shouldCloseOnOverlayClick={true}>
+          <CommentForm
+            onClose={this.handleModalClose}
+            isEditing={!!selectedCommentId}
+            initialValues={selectedCommentId ? comments[selectedCommentId] : this.emptyComment}
+            onSubmit={this.handleFormSubmit}
+          />
+        </Modal>
+      </Wrapper>
+    );
+  }
+}
 
 CommentList = connect(
   (state, props) => ({
     comments: state.comments[props.postId] || {}
   }),
   {
-    saveCommentVote
+    saveCommentVote,
+    createComment,
+    updateComment,
+    removeComment
   }
 )(CommentList);
 

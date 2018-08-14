@@ -13,14 +13,19 @@ const Wrapper = styled.div`
   color: #444;
 `;
 
-let Post = ({ post, savePostVote }) => {
+let Post = ({ post, comments, savePostVote }) => {
   if (!post) {
     return null;
   }
 
   return (
     <Wrapper>
-      <Info onVote={option => savePostVote(post.id, option)} data={post} showBody authorLabel="posted by " />
+      <Info
+        onVote={option => savePostVote(post.id, option)}
+        data={{ ...post, commentCount: comments ? Object.keys(comments).length : post.commentCount }}
+        showBody
+        authorLabel="posted by "
+      />
     </Wrapper>
   );
 };
@@ -32,7 +37,8 @@ Post.propTypes = {
 
 Post = connect(
   (state, props) => ({
-    post: state.posts[props.postId]
+    post: state.posts[props.postId],
+    comments: state.comments[props.postId]
   }),
   {
     savePostVote

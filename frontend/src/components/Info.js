@@ -75,7 +75,7 @@ const Comments = ({ commentCount }) => {
   );
 };
 
-const Info = ({ onVote, data, showBody, authorLabel }) => {
+const Info = ({ onVote, onEdit, onRemove, data, showBody, authorLabel }) => {
   if (!data) {
     return null;
   }
@@ -98,10 +98,10 @@ const Info = ({ onVote, data, showBody, authorLabel }) => {
               <Comments commentCount={data.commentCount} />
             </Button>
           )}
-        <ActionButton>
+        <ActionButton action={onEdit}>
           <FontAwesomeIcon icon={faPencilAlt} /> edit
         </ActionButton>
-        <ActionButton>
+        <ActionButton action={onRemove}>
           <FontAwesomeIcon icon={faTrashAlt} /> delete
         </ActionButton>
       </PostInfo>
@@ -111,6 +111,8 @@ const Info = ({ onVote, data, showBody, authorLabel }) => {
 
 Info.propTypes = {
   onVote: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
   data: PropTypes.shape({
     author: PropTypes.string.isRequired,
     title: PropTypes.string,
