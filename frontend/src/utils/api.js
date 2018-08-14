@@ -102,3 +102,19 @@ export function postVote(postId, option, callbacks) {
       }
     });
 }
+
+export function postCommentVote(commentId, option, callbacks) {
+  post(`${API_URL}/comments/${commentId}`, { option }, { headers })
+    .then(response => {
+      if (callbacks && callbacks.success) {
+        callbacks.success(response.data);
+      }
+    })
+    .catch(err => {
+      console.log(`There was an error posting your vote to /comments/${commentId}`, err);
+
+      if (callbacks && callbacks.error) {
+        callbacks.error(err);
+      }
+    });
+}

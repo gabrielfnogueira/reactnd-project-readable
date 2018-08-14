@@ -7,6 +7,8 @@ import { getPosts, getPostsByCategory, postsSelector } from '../redux/modules/po
 import OrderBy from './OrderBy';
 import Post from './Post';
 
+const Wrapper = styled.div``;
+
 const Title = styled.h1`
   margin-bottom: 1rem;
   display: inline-block;
@@ -64,7 +66,7 @@ class PostList extends PureComponent {
     const title = `All the posts ${selectedCategory ? `in the '${selectedCategory}' category` : ''}`;
 
     return (
-      <section>
+      <Wrapper>
         <Title>{title}</Title>
         <OrderBy orderBy={orderBy} setOrderBy={setOrderBy} />
         <List>
@@ -80,7 +82,7 @@ class PostList extends PureComponent {
             <EmptyItem>No posts in this category yet.</EmptyItem>
           )}
         </List>
-      </section>
+      </Wrapper>
     );
   }
 }

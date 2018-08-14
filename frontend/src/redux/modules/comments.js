@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { fetchPostComments } from '../../utils/api';
+import { fetchPostComments, postCommentVote } from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -49,6 +49,16 @@ export function getPostComments(postId) {
     fetchPostComments(postId, {
       success: comments => {
         comments.forEach(comment => dispatch({ type: ADD_COMMENT, payload: comment }));
+      }
+    });
+  };
+}
+
+export function saveCommentVote(commentId, voteOption) {
+  return dispatch => {
+    postCommentVote(commentId, voteOption, {
+      success: comment => {
+        dispatch({ type: ADD_COMMENT, payload: comment });
       }
     });
   };

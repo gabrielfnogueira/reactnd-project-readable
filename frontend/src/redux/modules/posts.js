@@ -66,7 +66,7 @@ export function getPostById(postId) {
   };
 }
 
-export function saveVote(postId, voteOption) {
+export function savePostVote(postId, voteOption) {
   return dispatch => {
     postVote(postId, voteOption, {
       success: post => {

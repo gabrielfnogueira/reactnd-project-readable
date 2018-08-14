@@ -1,4 +1,4 @@
-import { faComments, faPencilAlt, faTrashAlt, faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
+import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getPostComments } from '../redux/modules/comments';
 import { getPostById } from '../redux/modules/posts';
+import CommentList from './CommentList';
 import Post from './Post';
 
 const Wrapper = styled.div``;
@@ -48,6 +49,7 @@ class PostDetails extends Component {
           back to list
         </BackButton>
         <Post postId={postId} showBody />
+        <CommentList postId={postId} />
       </Wrapper>
     );
   }
