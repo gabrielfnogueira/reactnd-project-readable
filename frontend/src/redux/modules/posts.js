@@ -1,6 +1,5 @@
 import { omit } from 'lodash';
 import { createSelector } from 'reselect';
-import uuidv4 from 'uuid/v4';
 import {
   createPost as postPost,
   deletePost,
@@ -10,6 +9,7 @@ import {
   postVote,
   updatePost as putPost
 } from '../../utils/api';
+import { uuidv4 } from '../../utils/helpers';
 
 /**
  * ACTION TYPES

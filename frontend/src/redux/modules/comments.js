@@ -1,12 +1,12 @@
 import { omit } from 'lodash';
-import uuidv4 from 'uuid/v4';
 import {
   createComment as postComment,
+  deleteComment,
   fetchPostComments,
   postCommentVote,
-  updateComment as putComment,
-  deleteComment
+  updateComment as putComment
 } from '../../utils/api';
+import { uuidv4 } from '../../utils/helpers';
 
 /**
  * ACTION TYPES
