@@ -1,17 +1,43 @@
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { setOrderBy } from '../redux/modules/orderBy';
-import { getPosts, getPostsByCategory, postsSelector } from '../redux/modules/posts';
+import { getPosts, getPostsByCategory, postsSelector, createPost } from '../redux/modules/posts';
+import Modal from './Modal';
 import OrderBy from './OrderBy';
 import Post from './Post';
+import PostForm from './PostForm';
 
 const Wrapper = styled.div``;
+
+const Header = styled.div`
+  position: relative;
+  width: 100%;
+`;
 
 const Title = styled.h1`
   margin-bottom: 1rem;
   display: inline-block;
+`;
+
+const NewPost = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 1px solid #444;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+
+  > .svg-inline--fa {
+    margin-right: 1rem;
+  }
 `;
 
 const List = styled.ul`
@@ -39,7 +65,17 @@ const PostLink = styled(Link)`
 `;
 
 class PostList extends PureComponent {
-  state = { posts: [] };
+  state = {
+    posts: [],
+    showModal: false
+  };
+
+  newPost = {
+    title: '',
+    author: '',
+    category: '',
+    body: ''
+  };
 
   componentDidMount() {
     this.fetchPosts();
@@ -61,20 +97,39 @@ class PostList extends PureComponent {
     }
   }
 
+  handleModalOpen = () => {
+    this.setState({ showModal: true });
+  };
+
+  handleModalClose = () => {
+    this.setState({ showModal: false });
+  };
+
+  handleFormSubmit = post => {
+    this.props.createPost(post, this.handleModalClose);
+  };
+
   render() {
-    const { selectedCategory, posts, orderBy, setOrderBy } = this.props;
-    const title = `All the posts ${selectedCategory ? `in the '${selectedCategory}' category` : ''}`;
+    const { showModal } = this.state;
+    const { selectedCategory, posts, postsList, orderBy, setOrderBy } = this.props;
+    const title = `all the posts ${selectedCategory ? `in the '${selectedCategory}' category` : ''}`;
 
     return (
       <Wrapper>
-        <Title>{title}</Title>
-        <OrderBy orderBy={orderBy} setOrderBy={setOrderBy} />
+        <Header>
+          <Title>{title}</Title>
+          <OrderBy orderBy={orderBy} setOrderBy={setOrderBy} />
+          <NewPost onClick={this.handleModalOpen}>
+            <FontAwesomeIcon icon={faPlus} />
+            new post
+          </NewPost>
+        </Header>
         <List>
-          {posts.length > 0 ? (
-            posts.map(post => (
-              <ListItem key={post.id}>
-                <PostLink to={`/${selectedCategory || post.category}/${post.id}`}>
-                  <Post postId={post.id} />
+          {postsList.length > 0 ? (
+            postsList.map(postId => (
+              <ListItem key={postId}>
+                <PostLink to={`/${selectedCategory || posts[postId].category}/${postId}`}>
+                  <Post postId={postId} />
                 </PostLink>
               </ListItem>
             ))
@@ -82,6 +137,9 @@ class PostList extends PureComponent {
             <EmptyItem>No posts in this category yet.</EmptyItem>
           )}
         </List>
+        <Modal isOpen={showModal} onRequestClose={this.handleModalClose} shouldCloseOnOverlayClick={true}>
+          <PostForm onClose={this.handleModalClose} initialValues={this.newPost} onSubmit={this.handleFormSubmit} />
+        </Modal>
       </Wrapper>
     );
   }
@@ -89,13 +147,15 @@ class PostList extends PureComponent {
 
 PostList = connect(
   (state, props) => ({
-    posts: postsSelector(state, props),
+    posts: state.posts,
+    postsList: postsSelector(state, props),
     orderBy: state.orderBy
   }),
   {
     getPosts,
     getPostsByCategory,
-    setOrderBy
+    setOrderBy,
+    createPost
   }
 )(PostList);
 

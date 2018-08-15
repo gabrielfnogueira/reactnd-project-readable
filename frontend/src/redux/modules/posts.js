@@ -1,6 +1,15 @@
 import { omit } from 'lodash';
 import { createSelector } from 'reselect';
-import { fetchPostById, fetchPosts, fetchPostsByCategory, postVote } from '../../utils/api';
+import uuidv4 from 'uuid/v4';
+import {
+  createPost as postPost,
+  deletePost,
+  fetchPostById,
+  fetchPosts,
+  fetchPostsByCategory,
+  postVote,
+  updatePost as putPost
+} from '../../utils/api';
 
 /**
  * ACTION TYPES
@@ -66,6 +75,45 @@ export function getPostById(postId) {
   };
 }
 
+export function createPost(post, callback) {
+  return dispatch => {
+    const newPost = { ...post, id: uuidv4(), timestamp: new Date().getTime() };
+    postPost(newPost, {
+      success: post => {
+        dispatch({ type: ADD_POST, payload: { ...newPost, ...post } });
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    });
+  };
+}
+
+export function updatePost(post, callback) {
+  return dispatch => {
+    putPost(post, {
+      success: post => {
+        dispatch({ type: ADD_POST, payload: post });
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    });
+  };
+}
+
+export function removePost(postId) {
+  return dispatch => {
+    deletePost(postId, {
+      success: post => {
+        dispatch({ type: DELETE_POST, payload: post });
+      }
+    });
+  };
+}
+
 export function savePostVote(postId, voteOption) {
   return dispatch => {
     postVote(postId, voteOption, {
@@ -87,10 +135,7 @@ export const postsSelector = createSelector(
     return selectedCategory
       ? Object.keys(posts)
           .filter(postId => posts[postId].category === selectedCategory)
-          .map(postId => posts[postId])
           .sort((a, b) => b[orderBy] - a[orderBy])
-      : Object.keys(posts)
-          .map(postId => posts[postId])
-          .sort((a, b) => b[orderBy] - a[orderBy]);
+      : Object.keys(posts).sort((a, b) => b[orderBy] - a[orderBy]);
   }
 );

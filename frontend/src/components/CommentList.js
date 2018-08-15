@@ -8,7 +8,16 @@ import Modal from './Modal';
 
 const Wrapper = styled.div``;
 
-const AddComment = styled.button``;
+const AddComment = styled.button`
+  border: 1px solid #444;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  width: 100%;
+`;
 
 const List = styled.ul`
   list-style: none;
@@ -30,7 +39,7 @@ class CommentList extends Component {
     selectedCommentId: null
   };
 
-  emptyComment = {
+  newComment = {
     author: '',
     body: ''
   };
@@ -76,7 +85,7 @@ class CommentList extends Component {
           <CommentForm
             onClose={this.handleModalClose}
             isEditing={!!selectedCommentId}
-            initialValues={selectedCommentId ? comments[selectedCommentId] : this.emptyComment}
+            initialValues={selectedCommentId ? comments[selectedCommentId] : this.newComment}
             onSubmit={this.handleFormSubmit}
           />
         </Modal>

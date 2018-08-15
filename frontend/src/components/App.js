@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled, { injectGlobal } from 'styled-components';
+import Post404 from './Post404';
 import PostDetails from './PostDetails';
 import PostList from './PostList';
 import Sidebar from './Sidebar';
@@ -47,6 +48,7 @@ class App extends Component {
           <Sidebar />
           <Content>
             <Switch>
+              <Route exact path="/posts/404" component={Post404} />
               <Route
                 exact
                 path="/:category?"

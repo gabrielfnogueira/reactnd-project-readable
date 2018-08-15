@@ -62,6 +62,13 @@ export function fetchPostById(postId, callbacks) {
   axios
     .get(`${API_URL}/posts/${postId}`, { headers })
     .then(response => {
+      let post = response.data;
+
+      if (Object.keys(post).length === 0 && post.constructor === Object) {
+        post.id = postId;
+        post.deleted = true;
+      }
+
       if (callbacks && callbacks.success) {
         callbacks.success(response.data);
       }
@@ -85,6 +92,57 @@ export function fetchPostComments(postId, callbacks) {
     })
     .catch(err => {
       console.log(`There was an error fetching /posts/${postId}/comments`, err);
+
+      if (callbacks && callbacks.error) {
+        callbacks.error(err);
+      }
+    });
+}
+
+export function createPost(post, callbacks) {
+  axios
+    .post(`${API_URL}/posts`, post, { headers })
+    .then(response => {
+      if (callbacks && callbacks.success) {
+        callbacks.success(response.data);
+      }
+    })
+    .catch(err => {
+      console.log(`There was an error posting to /post`, err);
+
+      if (callbacks && callbacks.error) {
+        callbacks.error(err);
+      }
+    });
+}
+
+export function updatePost(post, callbacks) {
+  axios
+    .put(`${API_URL}/posts/${post.id}`, post, { headers })
+    .then(response => {
+      if (callbacks && callbacks.success) {
+        callbacks.success(response.data);
+      }
+    })
+    .catch(err => {
+      console.log(`There was an error putting to /posts/${post.id}`, err);
+
+      if (callbacks && callbacks.error) {
+        callbacks.error(err);
+      }
+    });
+}
+
+export function deletePost(postId, callbacks) {
+  axios
+    .delete(`${API_URL}/posts/${postId}`, { headers })
+    .then(response => {
+      if (callbacks && callbacks.success) {
+        callbacks.success(response.data);
+      }
+    })
+    .catch(err => {
+      console.log(`There was an error deleting /posts/${postId}`, err);
 
       if (callbacks && callbacks.error) {
         callbacks.error(err);

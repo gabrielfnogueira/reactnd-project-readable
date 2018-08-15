@@ -14,7 +14,14 @@ const Wrapper = styled.div``;
 const BackButton = styled(Link)`
   line-height: 1.65rem;
   margin-bottom: 1rem;
-  display: block;
+  display: inline-block;
+  border: 1px solid #444;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
 
   > .svg-inline--fa {
     margin-right: 1rem;
@@ -33,6 +40,14 @@ class PostDetails extends Component {
 
     getPostById(postId);
     getPostComments(postId);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.post && !this.props.post) {
+      this.props.history.push('/');
+    } else if (this.props.post && this.props.post.deleted) {
+      this.props.history.push('/posts/404');
+    }
   }
 
   render() {

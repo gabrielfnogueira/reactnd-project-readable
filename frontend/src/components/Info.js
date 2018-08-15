@@ -48,8 +48,8 @@ const ActionButton = ({ action, children }) => {
   return (
     <Button
       onClick={e => {
-        e.stopPropagation();
         e.preventDefault();
+        e.stopPropagation();
 
         if (action) {
           action();

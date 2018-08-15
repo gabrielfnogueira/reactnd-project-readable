@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { savePostVote } from '../redux/modules/posts';
+import { savePostVote, updatePost, removePost } from '../redux/modules/posts';
 import Info from './Info';
+import Modal from './Modal';
+import PostForm from './PostForm';
 
 const Wrapper = styled.div`
   padding: 1rem 1rem 0.5rem 0.5rem;
@@ -13,22 +16,57 @@ const Wrapper = styled.div`
   color: #444;
 `;
 
-let Post = ({ post, comments, savePostVote }) => {
-  if (!post) {
-    return null;
-  }
+class Post extends Component {
+  state = {
+    showModal: false
+  };
 
-  return (
-    <Wrapper>
-      <Info
-        onVote={option => savePostVote(post.id, option)}
-        data={{ ...post, commentCount: comments ? Object.keys(comments).length : post.commentCount }}
-        showBody
-        authorLabel="posted by "
-      />
-    </Wrapper>
-  );
-};
+  handleModalOpen = e => {
+    this.setState({
+      showModal: true
+    });
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      showModal: false
+    });
+  };
+
+  handleFormSubmit = post => {
+    this.props.updatePost(post, this.handleModalClose);
+  };
+
+  render() {
+    const { showModal } = this.state;
+    const { post, comments, savePostVote, removePost } = this.props;
+
+    if (!post) {
+      return null;
+    }
+
+    return (
+      <Wrapper>
+        <Info
+          onVote={option => savePostVote(post.id, option)}
+          onEdit={this.handleModalOpen}
+          onRemove={() => removePost(post.id)}
+          data={{ ...post, commentCount: comments ? Object.keys(comments).length : post.commentCount }}
+          showBody
+          authorLabel="posted by "
+        />
+        <Modal isOpen={showModal} onRequestClose={this.handleModalClose} shouldCloseOnOverlayClick={true}>
+          <PostForm
+            onClose={this.handleModalClose}
+            isEditing={true}
+            initialValues={post}
+            onSubmit={this.handleFormSubmit}
+          />
+        </Modal>
+      </Wrapper>
+    );
+  }
+}
 
 Post.propTypes = {
   postId: PropTypes.string,
@@ -41,8 +79,10 @@ Post = connect(
     comments: state.comments[props.postId]
   }),
   {
-    savePostVote
+    savePostVote,
+    updatePost,
+    removePost
   }
 )(Post);
 
-export default Post;
+export default withRouter(Post);
