@@ -135,7 +135,7 @@ export const postsSelector = createSelector(
     return selectedCategory
       ? Object.keys(posts)
           .filter(postId => posts[postId].category === selectedCategory)
-          .sort((a, b) => b[orderBy] - a[orderBy])
-      : Object.keys(posts).sort((a, b) => b[orderBy] - a[orderBy]);
+          .sort((a, b) => posts[b][orderBy] - posts[a][orderBy])
+      : Object.keys(posts).sort((a, b) => posts[b][orderBy] - posts[a][orderBy]);
   }
 );
