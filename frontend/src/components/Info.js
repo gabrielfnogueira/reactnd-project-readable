@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
+import { formatDateTimeAt } from '../utils/helpers';
 import Voter from './Voter';
 
 const Wrapper = styled.div`
@@ -76,9 +77,7 @@ const Info = ({ onVote, onEdit, onRemove, data, showBody, authorLabel }) => {
     return null;
   }
 
-  const dateTime = `at ${new Date(data.timestamp).toLocaleDateString()} ${new Date(
-    data.timestamp
-  ).toLocaleTimeString()}`;
+  const dateTime = formatDateTimeAt(data.timestamp);
 
   return (
     <Wrapper>
