@@ -1,8 +1,8 @@
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,25 +29,19 @@ const Value = styled.p`
 `;
 
 const Voter = ({ value, onVote }) => {
+  const vote = (e, vote) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onVote(vote);
+  };
+
   return (
     <Wrapper>
-      <Button
-        onClick={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          onVote('upVote');
-        }}
-      >
+      <Button onClick={e => vote(e, 'upVote')}>
         <FontAwesomeIcon icon={faAngleUp} />
       </Button>
       <Value>{value}</Value>
-      <Button
-        onClick={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          onVote('downVote');
-        }}
-      >
+      <Button onClick={e => vote(e, 'downVote')}>
         <FontAwesomeIcon icon={faAngleDown} />
       </Button>
     </Wrapper>
