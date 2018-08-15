@@ -62,11 +62,7 @@ const ActionButton = ({ action, children }) => {
 };
 
 const Comments = ({ commentCount }) => {
-  let label = 'no comments yet';
-
-  if (commentCount) {
-    label = `${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}`;
-  }
+  const label = commentCount ? `${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}` : 'no comments yet';
 
   return (
     <Fragment>
