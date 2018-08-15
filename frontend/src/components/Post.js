@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { savePostVote, updatePost, removePost } from '../redux/modules/posts';
+import { removePost, savePostVote, updatePost } from '../redux/modules/posts';
 import Info from './Info';
 import Modal from './Modal';
 import PostForm from './PostForm';
@@ -21,16 +21,10 @@ class Post extends Component {
     showModal: false
   };
 
-  handleModalOpen = e => {
-    this.setState({
-      showModal: true
-    });
-  };
-
-  handleModalClose = () => {
-    this.setState({
-      showModal: false
-    });
+  toggleModal = () => {
+    this.setState(prevState => ({
+      showModal: !prevState.showModal
+    }));
   };
 
   handleFormSubmit = post => {
@@ -49,19 +43,14 @@ class Post extends Component {
       <Wrapper>
         <Info
           onVote={option => savePostVote(post.id, option)}
-          onEdit={this.handleModalOpen}
+          onEdit={this.toggleModal}
           onRemove={() => removePost(post.id)}
           data={{ ...post, commentCount: comments ? Object.keys(comments).length : post.commentCount }}
           showBody
           authorLabel="posted by "
         />
-        <Modal isOpen={showModal} onRequestClose={this.handleModalClose} shouldCloseOnOverlayClick={true}>
-          <PostForm
-            onClose={this.handleModalClose}
-            isEditing={true}
-            initialValues={post}
-            onSubmit={this.handleFormSubmit}
-          />
+        <Modal isOpen={showModal} onRequestClose={this.toggleModal} shouldCloseOnOverlayClick={true}>
+          <PostForm onClose={this.toggleModal} isEditing={true} initialValues={post} onSubmit={this.handleFormSubmit} />
         </Modal>
       </Wrapper>
     );
