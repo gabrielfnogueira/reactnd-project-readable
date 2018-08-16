@@ -14,3 +14,12 @@ To get started developing right away:
     - `cd frontend`
     - `npm install`
     - `npm start`
+
+## Libraries used
+
+- axios: to handle api requests
+- formik: to handle the annoying parts when dealing with forms
+- prop-types: to typecheck the props passed to reusable components
+- react-fontawesome: to display svg icons
+- reselect: to query post data ordered by selected field
+- styled-components: to style the components using the css-in-js approach
